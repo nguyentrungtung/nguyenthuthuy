@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,user-scalable=no" />
+    <title>Nguyễn Thu Thuỷ</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        /* for touch screen */
+        touch-action: none;
+      }
+
+      body {
+        overflow: hidden;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        background: #111;
+        -webkit-perspective: 1000px;
+        perspective: 1000px;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+      }
+
+      #drag-container,
+      #spin-container {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        margin: auto;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-transform: rotateX(-10deg);
+        transform: rotateX(-10deg);
+      }
+
+      #drag-container img,
+      #drag-container video {
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        line-height: 200px;
+        font-size: 50px;
+        text-align: center;
+        -webkit-box-shadow: 0 0 8px #fff;
+        box-shadow: 0 0 8px #fff;
+        -webkit-box-reflect: below 10px
+          linear-gradient(transparent, transparent, #0005);
+      }
+
+      #drag-container img:hover,
+      #drag-container video:hover {
+        -webkit-box-shadow: 0 0 15px #fffd;
+        box-shadow: 0 0 15px #fffd;
+        -webkit-box-reflect: below 10px
+          linear-gradient(transparent, transparent, #0007);
+      }
+
+      #drag-container p {
+        font-family: Serif;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%) rotateX(90deg);
+        transform: translate(-50%, -50%) rotateX(90deg);
+        color: #fff;
+      }
+
+      #ground {
+        width: 900px;
+        height: 900px;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%) rotateX(90deg);
+        transform: translate(-50%, -50%) rotateX(90deg);
+        background: -webkit-radial-gradient(
+          center center,
+          farthest-side,
+          #9993,
+          transparent
+        );
+      }
+
+      #music-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+
+      h1.text {
+        padding: 40px;
+      }
+
+      @-webkit-keyframes spin {
+        from {
+          -webkit-transform: rotateY(0deg);
+          transform: rotateY(0deg);
+        }
+        to {
+          -webkit-transform: rotateY(360deg);
+          transform: rotateY(360deg);
+        }
+      }
+
+      @keyframes spin {
+        from {
+          -webkit-transform: rotateY(0deg);
+          transform: rotateY(0deg);
+        }
+        to {
+          -webkit-transform: rotateY(360deg);
+          transform: rotateY(360deg);
+        }
+      }
+      @-webkit-keyframes spinRevert {
+        from {
+          -webkit-transform: rotateY(360deg);
+          transform: rotateY(360deg);
+        }
+        to {
+          -webkit-transform: rotateY(0deg);
+          transform: rotateY(0deg);
+        }
+      }
+      @keyframes spinRevert {
+        from {
+          -webkit-transform: rotateY(360deg);
+          transform: rotateY(360deg);
+        }
+        to {
+          -webkit-transform: rotateY(0deg);
+          transform: rotateY(0deg);
+        }
+      }
+
+
+    /**
+    ********************************/
+
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:700|Pacifico');
+
+    *, *:after, *:before{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      -webkit-transition: all 100ms ease-in;
+      transition: all 100ms ease-in;
+    }
+    html{
+      background: #222048;
+    }
+    .feliz{
+      width: 100%;
+      font-family: 'Pacifico', cursive;
+      font-size: 70px;
+      font-weight: 700;
+      color: #f48fb1;
+      text-align: center;
+      position: absolute;
+      top: 25%;
+      opacity: 0;
+      animation: vem_feliz 2s ease-in-out 7s forwards;
+    }
+    .ano_novo{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 200px 100px 0px 0px;
+    }
+    .ano_novo>span{
+      font-family: 'Montserrat', sans-serif;
+      font-size: 175px;
+      font-weight: 700;
+      color: #7a8fe8;
+    }
+    span.seis{
+      position: absolute;
+      top: 50%;
+      right: 50%;
+      margin-right: -200px;
+      animation: vai_2016 5s ease-in-out 5s forwards;
+    }
+    span.sete{
+      position: absolute;
+      right: 0%;
+      margin-right: -200px;
+      animation: vem_2017 6s ease-in-out forwards;
+    }
+    span.sete:before{
+      content: '';
+      width: 0px;
+      height: 6px;
+      display: block;
+      border-radius: 3px;
+      background: #7a8fe8;
+      transform: rotate(0deg);
+      transform-origin: left top;
+      position: absolute;
+      top: 55px;
+      left: 10px;
+      z-index: -1;
+      animation: entrega_balao 1s ease-in-out 4s;
+    }
+    .balao{
+      width: 100px;
+      height: 100px;
+      display: block;
+      background: #e8d57a;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      margin-top: -165px;
+      right: 0%;
+      margin-right: -200px;
+      animation: vem_e_vai_balao 10s ease-in-out forwards;
+    }
+    .balao:before{
+      content: '';
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 10px 20px 10px;
+      border-color: transparent transparent #b19b32 transparent;
+      position: absolute;
+      left: 50%;
+      margin-left: -10px;
+      bottom: -10px;
+      z-index: -1;
+    }
+    .balao:after{
+      content: '';
+      width: 4px;
+      height: 100px;
+      display: block;
+      background: #fff;
+      border-radius: 0px 0px 3px 3px;
+      position: absolute;
+      left: 50%;
+      margin-left: -2px;
+      bottom: -110px;
+    }
+    .fogos{
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+    }
+    .fogos>div{
+      border: 2px solid #fff;
+      position: absolute;
+      opacity: 0;
+      animation: solta_fogos 1.5s ease-in-out 8s forwards;
+    }
+    .fogos>div.f1{
+      left: 20%;
+      top: 40%;
+    }
+    .fogos>div.f2{
+      left: 15%;
+      top: 70%;
+    }
+    .fogos>div.f3{
+      right: 20%;
+      top: 40%;
+    }
+    .fogos>div.f4{
+      right: 15%;
+      top: 70%;
+    }
+    .fogos>div span{
+      width: 6px;
+      height: 6px;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      animation: estoura_fogos 0.5s ease-in-out 9s forwards;
+    }
+    .fogos>div span:nth-child(1){
+      transform: rotate(0deg);
+    }
+    .fogos>div span:nth-child(2){
+      transform: rotate(120deg);
+    }
+    .fogos>div span:nth-child(3){
+      transform: rotate(240deg);
+    }
+    .fogos>div span:before{
+      content: '';
+      width: 2px;
+      height: 50px;
+      display: block;
+      background: #f5cc06;
+      position: absolute;
+      top: -60px;
+      left: 2px;
+    }
+    .fogos>div span:after{
+      content: '';
+      width: 2px;
+      height: 50px;
+      display: block;
+      background: #f5cc06;
+      position: absolute;
+      bottom: -60px;
+      left: 2px;
+    }
+    .fogos>div span i:before{
+      content: '';
+      width: 3px;
+      height: 3px;
+      display: block;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: -15px;
+      left: 10px;
+    }
+    .fogos>div span i:after{
+      content: '';
+      width: 3px;
+      height: 3px;
+      display: block;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: -15px;
+      right: 10px;
+    }
+    a.author{
+      font-size: 12px;
+      text-decoration: none;
+      color: #f47c7c;
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+    }
+
+    @keyframes vem_2017 {
+      0% {
+        right: 0%;
+      }
+      66.6666% {
+        right: 50%;
+        margin-right: -300px;
+      }
+      90% {
+        right: 50%;
+        margin-right: -300px;
+      }
+      100% {
+        right: 50%;
+      }
+    }
+    @keyframes vem_e_vai_balao {
+      0% {
+        right: 0%;
+      }
+      40% {
+        right: 50%;
+        margin-right: -300px;
+      }
+      50% {
+        right: 50%;
+        margin-right: -200px;
+        top: 50%;
+      }
+      100% {
+        top: -100%;
+        right: 50%;
+      }
+    }
+    @keyframes entrega_balao {
+      0% {
+        transform: rotate(-30deg);
+        width: 40px;
+      }
+      100% {
+        transform: rotate(-150deg);
+        width: 70px;
+      }
+    }
+    @keyframes vai_2016 {
+      0% {
+        top: 50%;
+      }
+      100% {
+        top: -100%;
+      }
+    }
+    @keyframes vem_feliz {
+      0% {
+        margin-top: 0px;
+        opacity: 0;
+      }
+      100% {
+        margin-top: -200px;;
+        opacity: 1;
+      }
+    }
+    @keyframes solta_fogos {
+      0% {
+        margin-top: 100%;
+        opacity: 0;
+        width: 2px;
+        height: 30px;
+        display: block;
+        border-radius: 50%;
+      }
+      75% {
+        margin-top: 0%;
+        opacity: 1;
+        width: 2px;
+        height: 30px;
+        display: block;
+        border-radius: 50%;
+      }
+      80%{
+        margin-top: 0px;
+        margin-left: 0px;
+        opacity: 1;
+        width: 10px;
+        height: 10px;
+        display: block;
+        border-radius: 50%;
+        transform: scale(0.2);
+      }
+      100%{
+        opacity: 1;
+        width: 10px;
+        height: 10px;
+        display: block;
+        border-radius: 50%;
+        transform: scale(1);
+      }
+    }
+    @keyframes estoura_fogos {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /***
+    ********************************/
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,800,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0D47A1;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3em;
+}
+
+.container h1 {
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+}
+
+#countdown {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2em;
+  /* background: rgba(255, 255, 255, 0.3); */
+  /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); */
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+#countdown .circle {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#countdown .circle svg {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  transform: rotate(270deg);
+}
+
+#countdown .circle svg circle {
+  width: 100%;
+  height: 100%;
+  fill: transparent;
+  stroke-width: 8;
+  stroke: #092c62;
+  stroke-linecap: round;
+  transform: translate(5px, 5px);
+}
+
+#countdown .circle svg circle:nth-child(2) {
+  stroke: var(--clr);
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+}
+
+#countdown div {
+  position: absolute;
+  text-align: center;
+  font-weight: 500;
+  color: #fff;
+  font-size: 1.5em;
+  line-height: 0.5em;
+}
+
+#countdown div span {
+  font-size: 0.35em;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* snowflakes */
+#snowflakes {
+  position: fixed;
+  top: -50%;
+  left: 0;
+  width: 150%;
+  height: 150%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+ion-icon[name="snow-outline"] {
+  color: #fff;
+  position: absolute;
+  top: -20px;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(105vh);
+  }
+}
+
+/* social/share menu */
+.menu {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  align-items: flex-end;
+  margin: 0 1em 1em 0;
+  z-index: 9;
+}
+
+.menu #help {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+  cursor: pointer;
+  font-size: 1.75em;
+  transition: 1.25s;
+}
+
+.menu li span {
+  text-transform: uppercase;
+  color:#fff;
+  text-align: center;
+}
+
+.menu.active .overlay {
+  position: absolute;
+  right: -1em;
+  bottom: -1em;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.5);
+  transition: 0.5s;
+}
+
+.menu.active #help {
+  transform: rotate(360deg);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15),
+  0 0 0 2px #333,
+  0 0 0 6px #fff;
+}
+
+.share-container {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-container {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+}
+
+.shareMenu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.socialMenu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.shareMenu li {
+  padding: 0 0.75em 0 0;
+}
+
+.socialMenu li {
+  padding: 0 0 0.75em;
+}
+
+.menu li,
+.menu li {
+  list-style: none;
+  transition: 0.5s;
+  scale: 0;
+  transition-delay: calc(0.05s * var(--i));
+}
+
+.menu.active li,
+.menu.active li {
+  scale: 1;
+}
+
+.menu li a {
+  display: flex;
+  width: 45px;
+  height: 45px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 1.4em;
+  color: var(--clr);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+  transition: 0.5s;
+}
+
+.menu li:hover a {
+  font-size: 1.6em;
+  box-shadow: 0 0 0 2px var(--clr),
+  0 0 0 6px #fff;
+}
+
+@media screen and (max-width: 600px) {
+  #countdown .circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  #countdown .circle svg {
+    height: 100px;
+    width: 100px;
+  }
+
+  #countdown .circle svg circle {
+    cx: 45;
+    cy: 45;
+    r: 45;
+    stroke-width: 5;
+  }
+
+  #countdown div {
+    font-size: 1.25em;
+  }
+
+  #music-container {
+    position: absolute;
+    bottom: 0 !important;
+    left: 0;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .text {
+    font-size: 20px;
+  }
+  #music-container {
+    position: absolute;
+    bottom: 0 !important;
+    left: 0;
+  }
+}
+
+
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container" style="display: none;">
+      <h1 class="text">Cùng Điếm Ngược Count Down Chúc Mừng Năm Mới 2023</h1>
+      <div id="countdown">
+        <div class="circle" style="--clr: #ff4c4c;">
+          <svg>
+            <circle cx="70" cy="70" r="70"></circle>
+            <circle cx="70" cy="70" r="70" id="dd"></circle>
+          </svg>
+          <div id="days">000<br><span>Days</span></div>
+        </div>
+    
+        <div class="circle" style="--clr: #ffd700;">
+          <svg>
+            <circle cx="70" cy="70" r="70"></circle>
+            <circle cx="70" cy="70" r="70" id="hh"></circle>
+          </svg>
+          <div id="hours">00<br><span>Hours</span></div>
+        </div>
+    
+        <div class="circle" style="--clr: #ffc0cb;">
+          <svg>
+            <circle cx="70" cy="70" r="70"></circle>
+            <circle cx="70" cy="70" r="70" id="mm"></circle>
+          </svg>
+          <div id="minutes">00<br><span>Minutes</span></div>
+        </div>
+    
+        <div class="circle" style="--clr: #b0e0e6;">
+          <svg>
+            <circle cx="70" cy="70" r="70"></circle>
+            <circle cx="70" cy="70" r="70" id="ss"></circle>
+          </svg>
+          <div id="seconds">00<br><span>Seconds</span></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- share/social menu -->
+    <div class="menu">
+      <div class="overlay"></div>
+      <div class="share-container">
+        <div id="help">
+          <ion-icon name="menu-outline"></ion-icon>
+        </div>
+        <ul class="shareMenu">
+          <li><span>share</span></li>
+          <li style="--i:0;--clr:#1877f2;">
+            <a href="" target="_blank" rel="nofollow noopener">
+              <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+          </li>
+          <li style="--i:1;--clr:#25d366;">
+            <a href="" target="_blank" rel="nofollow noopener">
+              <ion-icon name="logo-whatsapp"></ion-icon>
+            </a>
+          </li>
+          <li style="--i:2;--clr:#1da1f2;">
+            <a href="" target="_blank" rel="nofollow noopener">
+              <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+          </li>
+          <li style="--i:4;--clr:#0077b5;">
+            <a href="" target="_blank" rel="nofollow noopener">
+              <ion-icon name="logo-linkedin"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="social-container">
+        <ul class="socialMenu">
+          <li><span>Me</span></li>
+          <li style="--i:0;--clr:#1da1f2;">
+            <a href="" target="_blank">
+              <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+          </li>
+          <li style="--i:1;--clr:#fd1d1d;">
+            <a href="" target="_blank">
+              <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+          </li>
+          <li style="--i:2;--clr:#0077b5;">
+            <a href="" target="_blank">
+              <ion-icon name="logo-linkedin"></ion-icon>
+            </a>
+          </li>
+          <li style="--i:3;--clr:#333;">
+            <a href="" target="_blank">
+              <ion-icon name="logo-github"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <canvas id="snowflakes"></canvas>
+    
+    
+
+<div class="block_happy_new_year" style="display: none;" >
+  <div class="feliz">Happy new year 2023</div>
+  <div class="ano_novo">
+    <span>202</span>
+    <span class="seis">2</span>
+    <span class="sete">3</span>
+    <div class="balao"></div>
+  </div>
+  <div class="fogos">
+    <div class="f1">
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+    </div>
+    <div class="f2">
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+    </div>
+    <div class="f3">
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+    </div>
+    <div class="f4">
+      <span><i></i></span>
+      <span><i></i></span>
+      <span><i></i></span>
+    </div>
+  </div>
+</div>
+
+    <div id="drag-container">
+      <div id="spin-container">
+        <!-- Add your images (or video) here -->
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/2E329258-B559-49C1-82E3-ACE90D2B8E0C.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413797586"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/z_7893539250504799257_4_6743ed605e293d9241e9d2f0d7db7856.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413802018"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/z_7893539250504799257_2_026ca2323878605ed7f1399b61ff4515.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413801627"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/FC6500D0-DC5E-42D5-9BD0-0501055969C5.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413801011"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/1E9FD7E7-E438-4F40-84CD-1A8F1FD12E20.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413798914"
+          alt=""
+        />
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/10C30417-79BA-4D4A-A9BB-86E386E6C093.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413798898"
+          alt=""
+        />
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/0A7BBBC2-A15F-4F4A-84AA-CA75E649E6FE.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413798654"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/CADB14AD-7705-4EB4-BEAF-B571775F543C.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413798636"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/9F91F571-B852-4FFD-B82F-A4CDFC878E5C.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413798821"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/9E31523D-274A-480D-B27F-A1180379223E.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413798204"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/CB2D0EEF-E275-4C5A-AD61-EB519297CDFA.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413798505"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/014D6DAC-2AD1-4CFD-B0FF-C776B892FFD7.jpeg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413798180"
+          alt=""
+        />
+
+        <img
+          src="https://ik.imagekit.io/tungnt/thuthuy/44387210_10210448500007261_8296903958534815744_n.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1672413797351"
+          alt=""
+        />
+        
+ 
+        <!-- Example image with link -->
+        <!-- <a
+          target="_blank"
+          href="https://images.pexels.com/photos/139829/pexels-photo-139829.jpeg"
+        >
+          <img
+            src="https://images.pexels.com/photos/139829/pexels-photo-139829.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt=""
+          />
+        </a> -->
+
+        <!-- Example add video  -->
+        <!-- <video controls autoplay="autoplay" loop>
+          <source
+            src="https://player.vimeo.com/external/322244668.sd.mp4?s=338c48ac2dfcb1d4c0689968b5baf94eee6ca0c1&profile_id=165&oauth2_token_id=57447761"
+            type="video/mp4"
+          />
+        </video> -->
+
+        <!-- Text at center of ground -->
+        <p> Nguyễn Thu Thuỷ </p>
+      </div>
+      <div id="ground"></div>
+    </div>
+
+    <div id="music-container"></div>
+
+    
+    </style>
+    
+    <script>
+      document.onreadystatechange = function() {
+          if (document.readyState !== "complete") {
+              document.querySelector("body").style.visibility = "hidden";
+          } else {
+              setTimeout(() => {
+                document.querySelector("body").style.visibility = "visible";
+              }, 1000);
+          }
+      };
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script>
+      
+      // You can change global variables here:
+      var radius = 360; // how big of the radius
+      var autoRotate = true; // auto rotate or not
+      var rotateSpeed = -60; // unit: seconds/360 degrees
+      var imgWidth = 120; // width of images (unit: px) 120 
+      var imgHeight = 170; // height of images (unit: px) 170
+
+      // Link of background music - set 'null' if you dont want to play background music
+      var bgMusicURL =
+        "Why-Dont-We-Love Song.mp3";
+      var bgMusicControls = true; // Show UI music control
+
+      /*
+     NOTE:
+       + imgWidth, imgHeight will work for video
+       + if imgWidth, imgHeight too small, play/pause button in <video> will be hidden
+       + Music link are taken from: https://hoangtran0410.github.io/Visualyze-design-your-own-/?theme=HauMaster&playlist=1&song=1&background=28
+*/
+
+      // ===================== start =======================
+      setTimeout(init, 100);
+
+      var odrag = document.getElementById("drag-container");
+      var ospin = document.getElementById("spin-container");
+      var aImg = ospin.getElementsByTagName("img");
+      var aVid = ospin.getElementsByTagName("video");
+      var aEle = [...aImg, ...aVid]; // combine 2 arrays
+
+      // Size of images
+      ospin.style.width = imgWidth + "px";
+      ospin.style.height = imgHeight + "px";
+
+      // Size of ground - depend on radius
+      var ground = document.getElementById("ground");
+      ground.style.width = radius * 3 + "px";
+      ground.style.height = radius * 3 + "px";
+
+      function init(delayTime) {
+        for (var i = 0; i < aEle.length; i++) {
+          aEle[i].style.transform =
+            "rotateY(" +
+            i * (360 / aEle.length) +
+            "deg) translateZ(" +
+            radius +
+            "px)";
+          aEle[i].style.transition = "transform 1s";
+          aEle[i].style.transitionDelay =
+            delayTime || (aEle.length - i) / 4 + "s";
+        }
+      }
+
+      function applyTranform(obj) {
+        // Constrain the angle of camera (between 0 and 180)
+        if (tY > 180) tY = 180;
+        if (tY < 0) tY = 0;
+
+        // Apply the angle
+        obj.style.transform = "rotateX(" + -tY + "deg) rotateY(" + tX + "deg)";
+      }
+
+      function playSpin(yes) {
+        ospin.style.animationPlayState = yes ? "running" : "paused";
+      }
+
+      var sX,
+        sY,
+        nX,
+        nY,
+        desX = 0,
+        desY = 0,
+        tX = 0,
+        tY = 10;
+
+      // auto spin
+      if (autoRotate) {
+        var animationName = rotateSpeed > 0 ? "spin" : "spinRevert";
+        ospin.style.animation = `${animationName} ${Math.abs(
+          rotateSpeed
+        )}s infinite linear`;
+      }
+
+      // add background music
+      if (bgMusicURL) {
+        document.getElementById("music-container").innerHTML += `
+<audio src="${bgMusicURL}" ${
+          bgMusicControls ? "controls autoplay" : ""
+        } autoplay loop>
+</audio>
+`;
+      }
+
+      
+      // setup events
+      document.onpointerdown = function(e) {
+        clearInterval(odrag.timer);
+        e = e || window.event;
+        var sX = e.clientX,
+          sY = e.clientY;
+
+        this.onpointermove = function(e) {
+          e = e || window.event;
+          var nX = e.clientX,
+            nY = e.clientY;
+          desX = nX - sX;
+          desY = nY - sY;
+          tX += desX * 0.1;
+          tY += desY * 0.1;
+          applyTranform(odrag);
+          sX = nX;
+          sY = nY;
+        };
+
+        this.onpointerup = function(e) {
+          odrag.timer = setInterval(function() {
+            desX *= 0.95;
+            desY *= 0.95;
+            tX += desX * 0.1;
+            tY += desY * 0.1;
+            applyTranform(odrag);
+            playSpin(false);
+            if (Math.abs(desX) < 0.5 && Math.abs(desY) < 0.5) {
+              clearInterval(odrag.timer);
+              playSpin(true);
+            }
+          }, 17);
+          this.onpointermove = this.onpointerup = null;
+        };
+
+        return false;
+      };
+
+      document.onmousewheel = function(e) {
+        e = e || window.event;
+        var d = e.wheelDelta / 20 || -e.detail;
+        radius += d;
+        init(1);
+      };
+    </script>
+
+
+<script>
+
+  
+console.log("New Year Countdown Using JavaScript");
+console.log("I hope you guys like it :))");
+
+let days = document.getElementById('days');
+let hours = document.getElementById('hours');
+let minutes = document.getElementById('minutes');
+let seconds = document.getElementById('seconds');
+
+let dd = document.getElementById('dd');
+let hh = document.getElementById('hh');
+let mm = document.getElementById('mm');
+let ss = document.getElementById('ss');
+
+let countdown = document.getElementById("countdown");
+let wishDays = 10;
+
+let x = setInterval(function () {
+  let currentYear = new Date().getFullYear();
+  let newYear = new Date(`Jan 1, ${currentYear + 1} 00:00:00`);
+  let now = new Date().getTime();
+  let distance = newYear - now;
+
+  // time calculation
+  let d = Math.floor(distance / (1000 * 60 * 60 * 24));
+  let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  let s = Math.floor((distance % (1000 * 60)) / (1000));
+
+  // output the result
+  days.innerHTML = d + "<br><span>Days</span>";
+  hours.innerHTML = h + "<br><span>Hours</span>";
+  minutes.innerHTML = m + "<br><span>Minutes</span>";
+  seconds.innerHTML = s + "<br><span>Seconds</span>";
+
+  // animate stroke
+  dd.style.strokeDashoffset = 440 - (440 * d) / 365;
+  hh.style.strokeDashoffset = 440 - (440 * h) / 24;
+  mm.style.strokeDashoffset = 440 - (440 * m) / 60;
+  ss.style.strokeDashoffset = 440 - (440 * s) / 60;
+
+  // if countdown is over, change the innerText of .text
+  if (distance < 0) {
+    //document.querySelector('.text').innerText = `Happy New Year ${currentYear}`;
+    document.querySelector('.text').style.display = 'none';
+    document.querySelector('.container').style.display = 'none';
+    document.querySelector('#drag-container').style.display = 'block';
+    document.querySelector('.block_happy_new_year').style.display = 'block';
+
+  } else{
+    document.querySelector('.text').style.display = 'block';
+    document.querySelector('.container').style.display = 'block';
+    document.querySelector('#drag-container').style.display = 'none';
+    document.querySelector('.block_happy_new_year').style.display = 'none';
+
+  }
+}, 1000);
+
+// snowflakes
+const canvas = document.getElementById("snowflakes");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// snowflake colors
+const colors = ["#eee", "#ddd", "#ccc"];
+
+class SnowFlake {
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+    this.vx = 0;
+    this.vy = 0;
+    this.radius = 0;
+    this.color = "";
+    this.reset();
+  }
+
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = Math.random() - 0.5;
+    this.vy = Math.random() * 1 + 1;
+    this.radius = Math.random() * 1 + 1;
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.y + this.radius > canvas.height) {
+      this.reset();
+    }
+  }
+}
+
+const snowflakes = [];
+
+// initial snowflakes
+for (let i = 0; i < 100; i++) {
+  snowflakes.push(new SnowFlake());
+}
+
+// animation loop
+function animate() {
+  requestAnimationFrame(animate);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  snowflakes.forEach((snowflake) => {
+    snowflake.draw();
+    snowflake.update();
+  });
+}
+
+animate();
+
+// snow flake
+function createFlake() {
+  const flake = document.createElement('ion-icon');
+  flake.setAttribute('name', 'snow-outline');
+  flake.style.left = Math.random() * window.innerWidth + 'px';
+  flake.style.animationDuration = Math.random() * 3 + 2 + 's'; // between 2 - 5 seconds
+  flake.style.opacity = Math.random();
+  flake.style.fontSize = Math.random() * 10 + 10 + 'px';
+  
+  document.body.appendChild(flake);
+  
+  setTimeout(() => {
+    flake.remove();
+  }, 5000)
+}
+
+setInterval(createFlake, 500);
+
+// help button
+let help = document.getElementById('help');
+let menu = document.querySelector('.menu');
+
+help.onclick = function() {
+  menu.classList.toggle('active');
+  if (menu.classList.contains('active')) {
+    help.innerHTML = `<ion-icon name="close-outline"></ion-icon>`;
+  } else {
+    help.innerHTML = `<ion-icon name="menu-outline"><ion-icon>`;
+  }
+}
+
+
+</script>
+  </body>
+</html>
